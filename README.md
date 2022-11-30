@@ -130,7 +130,8 @@ public:
     //Adds enough blank lines to make it seem as if the console was cleared.
     //Every other built-in function I know of or could find was OS-dependant.
     void clear_console() {
-        cout << string(10, '\n') << endl;
+        cout << string(10,[In Class Assignment Week 12-1.docx](https://github.com/alexanderfatjo/COP-3003-Assignments/files/10126186/In.Class.Assignment.Week.12-1.docx)
+ '\n') << endl;
     }
     //visually separates the output from the following menu prompt.
     void in_out_sep() {
