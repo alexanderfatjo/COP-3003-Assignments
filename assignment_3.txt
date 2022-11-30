@@ -1,0 +1,318 @@
+In Class Assignment-12
+
+1.Write a C++ program to handle multiple errors and exceptions with different throw ids and multiple catches like the previous program.
+=========================SourceCode================================
+#include <iostream>
+using namespace std;
+int main() {
+    //move decimal of inputted number to the right(when positive) left(when negative) *(divides by 10)*
+    try {
+        float x, y{10};
+        cout << "Enter a number: ";
+        cin >> x;
+        if (x != 0) {
+            float prod = x / y;
+            cout << prod << endl;
+        } else {       //'101' is the 'throw_id'
+            throw(101);//if 'x = 0' then throw '101'.
+        }
+    }
+    //When x != 0, then no error is thrown/caught
+    catch (int div_err) { cout << "Error: X cannot be 0."
+                               << "\n\t\tException/Throw ID: " << 101 << endl; }
+    try {
+        string usr_inp{""};
+        cout << "Input 'y' or 'n':" << endl;
+        cin >> usr_inp;
+        if ("y" == usr_inp) {
+            string output = "Valid";
+            cout << "Input: " << output << endl;
+        } else {
+            //throw ID->'201' when else input is not 'y';
+            throw 201;
+        }
+    }
+    catch (int inp_err) {
+        cout << "Exception occurred. \n\t\tException/Throw ID: " << 201 << '\n';
+    }
+    return 0;
+}
+
+=========================Output====================================
+Enter a number:0
+ Error: X cannot be 0.
+                Exception/Throw ID: 101
+Input 'y' or 'n':
+n
+Exception occurred.
+                Exception/Throw ID: 201
+
+Process finished with exit code 0
+===================================================================
+
+2. Write a C++ program to build a simple calculator using templates.
+=========================SourceCode================================
+#include <iostream>
+using namespace std;
+//Can use any 'keyword' as long as it remains consistent.
+template<typename C>
+class Calculator {
+public:
+    C Add(C x0, C x1);
+    C Substract(C x0, C x1);
+    C Multiply(C x0, C x1);
+    C Divide(C x0, C x1);
+};
+template<typename c>
+c Calculator<c>::Add(c x0, c x1) {return (x0 + x1);}
+template<typename C>
+C Calculator<C>::Substract(C x0, C x1) { return (x0 - x1); }
+template<typename C>
+C Calculator<C>::Multiply(C x0, C x1) { return (x0 * x1); }
+template<typename C>
+C Calculator<C>::Divide(C x0, C x1) { return (x0 / x1); }
+
+int main() {
+    float prod;            //result of calculations with float type variables
+    Calculator<float> calc;//create an object of Calculator class
+
+    prod = calc.Add(8, 3);//call Add function
+    cout << "Product = " << prod << endl;
+
+    prod = calc.Substract(2, 97);
+    cout << "Product = " << prod << endl;
+
+    prod = calc.Multiply(4, 44);
+    cout << "Product = " << prod << endl;
+
+    prod = calc.Divide(18, 3);
+    cout << "Product = " << prod << endl;
+
+    //Adding char type variables
+    prod = calc.Add('a', 'f');
+    cout << "Product = " << prod << endl;
+
+    //Creating new object of Calculator class for specific data type's
+    //(not needed but can help in organization/readability).
+    Calculator<char> calc_alpha;
+    prod = calc_alpha.Add('a', 'f');
+    cout << "Product = " << prod << endl;
+
+    Calculator<string> calc_str();
+    prod = calc.Divide('Alex', 'Fatjo');
+    float str1 = 'Alex';
+    float str2 = 'Fatjo';
+    cout << "Steps: \n\t'Alex' = [" << str1 << "]\n\t'Fatjo' = [" << str2 << "]\n\t\tproduct = ["
+         << str1 << "] / [" << str2 << "]\n\t\t\t->" << prod << endl;
+    return 0;
+}
+
+=========================Output====================================
+Product = 11
+Product = -95
+Product = 176
+Product = 6
+Product = 199
+Product = -57
+Steps:
+        'Alex' = [1.09762e+09]
+        'Fatjo' = [1.63502e+09]
+                product = [1.09762e+09] / [1.63502e+09]
+                        ->0.671321
+
+Process finished with exit code 0
+===================================================================
+
+3. Write a C++ program to create, open, write and read a text file.
+=========================SourceCode================================
+#include <fstream>
+#include <iostream>
+#include <string>
+using namespace std;
+class library {
+public:
+    library() {};
+    struct book {
+        string title{""};
+        string author{""};
+        int price{};
+        int id{};
+    };
+    book b;//to access the book structs members from functions
+    void add_book() {
+        ofstream outFile;
+        outFile.open("book.txt", ios::app);
+
+        cout << "ID: ";
+        cin >> b.id;
+        outFile << b.id << " ";
+
+        cout << "Title: ";
+        cin >> b.title;
+        outFile << b.title << " ";
+
+        cout << "Author: ";
+        cin >> b.author;
+        outFile << b.author << " ";
+
+        cout << "Price: ";
+        cin >> b.price;
+        outFile << b.price << ">\n";
+
+        outFile.close();
+        cout << "Book added successfully!" << endl;
+    }
+    void delete_book() {
+        int idtmp;
+        cout << "Enter book ID to delete: ";
+        cin >> idtmp;
+        if (idtmp == b.id) {
+            ifstream inFile;
+            inFile.open("book.txt");
+            ofstream outFile;
+            remove("book.txt");
+            rename("temp.txt", "book.txt");
+            cout << "Deleted" << endl;
+        }else {
+            try{throw 1;}
+            catch(int x){cout << "Book ID not found" << endl;}
+        }
+    }
+    void edit_book() {
+        ofstream outFile;
+        outFile.open("book.txt", ios::app);
+        cout << "ID: ";
+        cin >> b.id;
+        outFile << b.id << " ";
+        cout << "Price: ";
+        cin >> b.price;
+        outFile << b.price << ">\n";
+        outFile.close();//closes file once done writing
+    }
+    //to override the book struct members with 'NULL' values.
+    void reset_book() {
+        int id{NULL}, price{NULL};
+        string title{NULL}, author{NULL};
+        this->b.id = id;
+        this->b.title = title;
+        this->b.author = author;
+        this->b.price = price;
+    }
+    void display_book() {
+        ifstream inFile;
+        inFile.open("book.txt");
+        cout << "ID: " << b.id << "\nTitle: " << b.title << "\nAuthor: " << b.author << "\nPrice: " << b.price << endl;
+    }
+};
+class ui_menu : public library {
+public:
+    void menu_opt() {
+        cout << "[1]-Add book"
+             << "\n[2]-Edit Book"
+             << "\n[3]-Display Book"
+             << "\n[4]-Delete Book"
+             << "\n[0]-Quit" << endl;
+    }
+    virtual void main_menu() {
+        int user_input;
+        do {
+            menu_opt();
+            cin >> user_input;
+            switch (user_input) {
+                //cout << "[1]-Add book" << "\n[2]-Edit Book" << "\n[3]-Delete Book" << "\n[0]-Quit" << endl;
+                //cin >> user_input;
+                case 1:
+                    library::add_book();
+                    break;
+                case 2:
+                    library::edit_book();
+                    break;
+                case 3:
+                    library::display_book();
+                    break;
+                case 4:
+                    library::delete_book();
+                    library::reset_book();
+                    break;
+                case 0:
+                    EXIT_SUCCESS;
+                    break;
+                default: //if user doesnt enter an int between 0-4
+                    try {throw user_input;} //tests if user input is valid
+                    //if not then this will catch the error and prints the error message
+                    catch (int user_input) {cout << "Error occurred: \n\tLocation: ui_menu::main_menu->'switch'" << endl;}
+                    break;
+            }
+        }while (user_input != 0);//loops
+    }
+};
+
+int main() {
+    library::book b{};//create a book object
+    ui_menu menu{};   //create a menu object
+    menu.main_menu(); //call the main menu function
+    return 0;
+}
+
+=========================Output====================================
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+1
+ID:1101
+Title:The
+Author:Alex
+Price:3009
+Confirmed
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+2
+ID:1102
+Price:344
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+3
+ID: 1102
+Title: The
+Author: Alex
+Price: 344
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+4
+Enter book ID to delete:1102
+Deleted
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+3
+ID: 0
+Title:
+Author:
+Price: 0
+[1]-Add book
+[2]-Edit Book
+[3]-Display Book
+[4]-Delete Book
+[0]-Quit
+0
+
+Process finished with exit code 0
+===================================================================
+
+
+
+
+
