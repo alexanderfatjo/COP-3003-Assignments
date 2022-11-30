@@ -1,4 +1,5 @@
 # COP-3003-Assignments
+//Full log file
 This is a collection of Assignments to showcase progression within C++.
 //#################################################[Stack Operations]#################################################
 /*
